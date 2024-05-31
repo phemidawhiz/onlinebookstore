@@ -11,7 +11,7 @@ public interface IBookService
 {
     Task<IEnumerable<Book>> GetAll();
     Task<Book> GetById(int id);
-    Task<Book> Search(string searchTerm);
+    Task<IEnumerable<Book>> Search(string searchTerm);
     Task Create(CreateBook model);
     Task Update(int id, UpdateBook model);
     Task Delete(int id);
@@ -45,7 +45,7 @@ public class BookService : IBookService
         return book;
     }
 
-    public async Task<Book> Search(string searchTerm)
+    public async Task<IEnumerable<Book>> Search(string searchTerm)
     {
         var book = await _bookRepository.Search(searchTerm);
 

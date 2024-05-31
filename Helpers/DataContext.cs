@@ -48,7 +48,6 @@ public class DataContext
         await _initBooks();
         await _initCart();
         await _initCartItems();
-        await _initCartItems();
 
         async Task _initUsers()
         {
@@ -113,7 +112,6 @@ public class DataContext
                     UserId INTEGER,
                     OrderStatus INTEGER,
                     PaymentOption INTEGER,
-                    OrderStatus INTEGER,
                     CreatedAt TIMESTAMP NOT NULL,
                     UpdatedAt TIMESTAMP default current_timestamp,
                     CONSTRAINT FkUserId FOREIGN KEY(UserId) REFERENCES Users(Id)

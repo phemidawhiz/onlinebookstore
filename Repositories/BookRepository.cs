@@ -8,7 +8,7 @@ public interface IBookRepository
 {
     Task<IEnumerable<Book>> GetAll();
     Task<Book> GetById(int id);
-    Task<Book> Search(string searchTerm);
+    Task<IEnumerable<Book>> Search(string searchTerm);
     Task Create(Book book);
     Task Update(Book book);
     Task Delete(int id);
