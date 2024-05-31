@@ -67,9 +67,8 @@ public class CartRepository : ICartRepository
     {
         using var connection = _context.CreateConnection();
         var sql = """
-            UPDATE Carts 
-            SET UserId = @UserId,
-                OrderStatus = @OrderStatus,
+            UPDATE Cart 
+            SET OrderStatus = @OrderStatus,
                 PaymentOption = @PaymentOption
             WHERE Id = @Id
         """;
@@ -80,7 +79,7 @@ public class CartRepository : ICartRepository
     {
         using var connection = _context.CreateConnection();
         var sql = """
-            DELETE FROM Carts 
+            DELETE FROM Cart 
             WHERE Id = @id
         """;
         await connection.ExecuteAsync(sql, new { id });
