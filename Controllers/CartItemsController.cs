@@ -37,6 +37,13 @@ public class CartItemsController : ControllerBase
         return Ok(cartItems);
     }
 
+    [HttpGet("cart/book/{id}")]
+    public async Task<IActionResult> GetByCartItemBook(int id)
+    {
+        var cartItems = await _cartItemService.GetByCartItemBook(id);
+        return Ok(cartItems);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateCartItem model)
     {

@@ -12,6 +12,7 @@ public interface ICartItemService
     Task<IEnumerable<CartItem>> GetAll();
     Task<CartItem> GetById(int id);
     Task<IEnumerable<CartItem>> GetByCartId(int id);
+    Task<IEnumerable<CartItemBook>> GetByCartItemBook(int id);
     Task Create(CreateCartItem model);
     Task Update(int id, UpdateCartItem model);
     Task Delete(int id);
@@ -44,13 +45,23 @@ public class CartItemService : ICartItemService
 
         return cartItem;
     }
-
+    
     public async Task<IEnumerable<CartItem>> GetByCartId(int id)
     {
         var cartItem = await _cartItemRepository.GetByCartId(id);
 
         if (cartItem == null)
             throw new KeyNotFoundException("CartItem(s) not found");
+
+        return cartItem;
+    }
+
+    public async Task<IEnumerable<CartItemBook>> GetByCartItemBook(int id)
+    {
+        var cartItem = await _cartItemRepository.GetByCartItemBook(id);
+
+        if (cartItem == null)
+            throw new KeyNotFoundException("Cart Item Book(s) not found");
 
         return cartItem;
     }
