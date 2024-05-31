@@ -30,6 +30,8 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IUserService, UserService>();
     services.AddScoped<IBookRepository, BookRepository>();
     services.AddScoped<IBookService, BookService>();
+    services.AddScoped<ICartItemRepository, CartItemRepository>();
+    services.AddScoped<ICartItemService, CartItemService>();
 }
 
 var app = builder.Build();
