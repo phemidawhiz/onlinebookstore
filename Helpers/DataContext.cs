@@ -60,7 +60,7 @@ public class DataContext
                     Email VARCHAR,
                     Role INTEGER,
                     PasswordHash VARCHAR,
-                    CreatedAt TIMESTAMP NOT NULL,
+                    CreatedAt TIMESTAMP default current_timestamp,
                     UpdatedAt TIMESTAMP default current_timestamp,
                     CONSTRAINT Email UNIQUE(Email)
                 );
@@ -79,7 +79,7 @@ public class DataContext
                     Author VARCHAR(150) NOT NULL,
                     Year VARCHAR(4) NOT NULL,
                     Price INTEGER,
-                    CreatedAt TIMESTAMP NOT NULL,
+                    CreatedAt TIMESTAMP default current_timestamp,
                     UpdatedAt TIMESTAMP default current_timestamp,
                     CONSTRAINT Isbn UNIQUE(Isbn)
                 );
@@ -95,7 +95,7 @@ public class DataContext
                     CartId INTEGER,
                     BookId INTEGER,
                     Quantity INTEGER,
-                    CreatedAt TIMESTAMP NOT NULL,
+                    CreatedAt TIMESTAMP default current_timestamp,
                     UpdatedAt TIMESTAMP default current_timestamp,
                     CONSTRAINT FkBookId FOREIGN KEY(BookId) REFERENCES Books(Id),
                     CONSTRAINT FkCartId FOREIGN KEY(CartId) REFERENCES Cart(Id)
@@ -112,7 +112,7 @@ public class DataContext
                     UserId INTEGER,
                     OrderStatus INTEGER,
                     PaymentOption INTEGER,
-                    CreatedAt TIMESTAMP NOT NULL,
+                    CreatedAt TIMESTAMP default current_timestamp,
                     UpdatedAt TIMESTAMP default current_timestamp,
                     CONSTRAINT FkUserId FOREIGN KEY(UserId) REFERENCES Users(Id)
                     ON UPDATE NO ACTION

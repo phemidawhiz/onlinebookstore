@@ -33,8 +33,8 @@ public class BooksController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> Search([BindRequired] string searchTerm)
     {
-        var book = await _bookService.Search(searchTerm);
-        return Ok(book);
+        var books = await _bookService.Search(searchTerm);
+        return Ok(books);
     }
 
     [HttpPost]

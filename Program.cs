@@ -28,6 +28,8 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddSingleton<DataContext>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IUserService, UserService>();
+    services.AddScoped<IBookRepository, BookRepository>();
+    services.AddScoped<IBookService, BookService>();
 }
 
 var app = builder.Build();
