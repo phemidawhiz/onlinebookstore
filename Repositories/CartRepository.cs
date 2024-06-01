@@ -1,6 +1,7 @@
 ﻿namespace WebApi.Repositories;
 
 using Dapper;
+using System.Collections.Specialized;
 using WebApi.Entities;
 using WebApi.Helpers;
 
@@ -8,7 +9,7 @@ public interface ICartRepository
 {
     Task<IEnumerable<Cart>> GetAll();
     Task<Cart> GetById(int id);
-    Task<IEnumerable<Cart>> GetCartItems(int id);
+    Task<IEnumerable<CartInfo>> GetCartItems(int id);
     Task Create(Cart cart);
     Task Update(Cart cart);
     Task Delete(int id);
@@ -42,15 +43,30 @@ public class CartRepository : ICartRepository
         return await connection.QuerySingleOrDefaultAsync<Cart>(sql, new { id });
     }
 
-    public async Task<IEnumerable<Cart>> GetCartItems(int id)
+    public async Task<IEnumerable<CartInfo>> GetCartItems(int id)
     {
         using var connection = _context.CreateConnection();
-        var sql = """
-            SELECT * FROM Cart 
-            WHERE Id = @id
-        """;
-        return await connection.QueryAsync<Cart>(sql, new { id });
+        var cartDictionary = new Dictionary<int, CartInfo>();
+        var sql = """SELECT c.*, ci.*, b.* FROM Cart c INNER JOIN CartItems ci ON c.Id = ci.CartId INNER JOIN Books b ON ci.BookId = b.Id WHERE c.Id = @id""";
+        return await connection.QueryAsync<CartInfo, Book, CartInfo>(sql,
+            (cart, book) =>
+            {
+                CartInfo cartEntry;
+
+                if (!cartDictionary.TryGetValue(cart.Id, out cartEntry))
+                {
+                    cartEntry = cart;
+                    cartEntry.Books = new List<Book>();
+                    cartDictionary.Add(cartEntry.Id, cartEntry);
+                }
+
+                cartEntry.Books.Add(book);
+                return cartEntry;
+            },
+            new { id },
+            splitOn: "BookId");
     }
+    
 
     public async Task Create(Cart cart)
     {

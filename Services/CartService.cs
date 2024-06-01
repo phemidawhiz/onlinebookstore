@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using BCrypt.Net;
+using System.Formats.Tar;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Carts;
@@ -11,7 +12,7 @@ public interface ICartService
 {
     Task<IEnumerable<Cart>> GetAll();
     Task<Cart> GetById(int id);
-    Task<IEnumerable<Cart>> GetCartItems(int id);
+    Task<IEnumerable<CartInfo>> GetCartItems(int id);
     Task Create(CreateCart model);
     Task Update(int id, UpdateCart model);
     Task Delete(int id);
@@ -45,7 +46,7 @@ public class CartService : ICartService
         return cart;
     }
 
-    public async Task<IEnumerable<Cart>> GetCartItems(int id)
+    public async Task<IEnumerable<CartInfo>> GetCartItems(int id)
     {
         var cart = await _cartRepository.GetCartItems(id);
 
