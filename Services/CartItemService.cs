@@ -12,7 +12,7 @@ public interface ICartItemService
     Task<IEnumerable<CartItem>> GetAll();
     Task<CartItem> GetById(int id);
     Task<IEnumerable<CartItem>> GetByCartId(int id);
-    Task<IEnumerable<CartItemBook>> GetByCartItemBook(int id);
+    Task<CartItemBook> GetByCartItemBook(int id);
     Task Create(CreateCartItem model);
     Task Update(int id, UpdateCartItem model);
     Task Delete(int id);
@@ -56,7 +56,7 @@ public class CartItemService : ICartItemService
         return cartItem;
     }
 
-    public async Task<IEnumerable<CartItemBook>> GetByCartItemBook(int id)
+    public async Task<CartItemBook> GetByCartItemBook(int id)
     {
         var cartItem = await _cartItemRepository.GetByCartItemBook(id);
 

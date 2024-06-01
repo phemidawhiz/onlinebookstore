@@ -12,7 +12,9 @@ public interface ICartService
 {
     Task<IEnumerable<Cart>> GetAll();
     Task<Cart> GetById(int id);
-    Task<IEnumerable<CartInfo>> GetCartItems(int id);
+    Task<IEnumerable<CartItemBook>> GetCartItems(int id);
+    Task<IEnumerable<CartInfo>> GetUserCartHistory(int id);
+    Task<IEnumerable<CartInfo>> GetUserPurchaseHistory(int id);
     Task Create(CreateCart model);
     Task Update(int id, UpdateCart model);
     Task Delete(int id);
@@ -46,12 +48,32 @@ public class CartService : ICartService
         return cart;
     }
 
-    public async Task<IEnumerable<CartInfo>> GetCartItems(int id)
+    public async Task<IEnumerable<CartItemBook>> GetCartItems(int id)
     {
         var cart = await _cartRepository.GetCartItems(id);
 
         if (cart == null)
             throw new KeyNotFoundException("Cart Items(s) not found");
+
+        return cart;
+    }
+
+    public async Task<IEnumerable<CartInfo>> GetUserCartHistory(int id)
+    {
+        var cart = await _cartRepository.GetUserCartHistory(id);
+
+        if (cart == null)
+            throw new KeyNotFoundException("Cart Items(s) not found");
+
+        return cart;
+    }
+
+    public async Task<IEnumerable<CartInfo>> GetUserPurchaseHistory(int id)
+    {
+        var cart = await _cartRepository.GetUserPurchaseHistory(id);
+
+        if (cart == null)
+            throw new KeyNotFoundException("History not found");
 
         return cart;
     }

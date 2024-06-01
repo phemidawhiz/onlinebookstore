@@ -37,6 +37,20 @@ public class CartsController : ControllerBase
         return Ok(carts);
     }
 
+    [HttpGet("user/{id}")]
+    public async Task<IActionResult> GetUserCartHistory(int id)
+    {
+        var carts = await _cartService.GetUserCartHistory(id);
+        return Ok(carts);
+    }
+
+    [HttpGet("history/{id}")]
+    public async Task<IActionResult> GetUserPurchaseHistory(int id)
+    {
+        var carts = await _cartService.GetUserPurchaseHistory(id);
+        return Ok(carts);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateCart model)
     {

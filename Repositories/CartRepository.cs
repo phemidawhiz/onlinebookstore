@@ -9,7 +9,9 @@ public interface ICartRepository
 {
     Task<IEnumerable<Cart>> GetAll();
     Task<Cart> GetById(int id);
-    Task<IEnumerable<CartInfo>> GetCartItems(int id);
+    Task<IEnumerable<CartItemBook>> GetCartItems(int id);
+    Task<IEnumerable<CartInfo>> GetUserCartHistory(int id); 
+    Task<IEnumerable<CartInfo>> GetUserPurchaseHistory(int id);
     Task Create(Cart cart);
     Task Update(Cart cart);
     Task Delete(int id);
@@ -43,30 +45,66 @@ public class CartRepository : ICartRepository
         return await connection.QuerySingleOrDefaultAsync<Cart>(sql, new { id });
     }
 
-    public async Task<IEnumerable<CartInfo>> GetCartItems(int id)
+    public async Task<IEnumerable<CartItemBook>> GetCartItems(int id)
+    {
+        using var connection = _context.CreateConnection();
+        var cartDictionary = new Dictionary<int, CartItemBook>();
+        var sql = """SELECT ci.*, b.* FROM CartItems ci INNER JOIN Books b ON ci.BookId = b.Id WHERE ci.CartId = @id""";
+        return await connection.QueryAsync<CartItemBook>(sql, new { id });
+    }
+
+    public async Task<IEnumerable<CartInfo>> GetUserCartHistory(int id)
     {
         using var connection = _context.CreateConnection();
         var cartDictionary = new Dictionary<int, CartInfo>();
-        var sql = """SELECT c.*, ci.*, b.* FROM Cart c INNER JOIN CartItems ci ON c.Id = ci.CartId INNER JOIN Books b ON ci.BookId = b.Id WHERE c.Id = @id""";
-        return await connection.QueryAsync<CartInfo, Book, CartInfo>(sql,
-            (cart, book) =>
+        var sql = """SELECT c.*, ci.*, b.* FROM Cart c INNER JOIN CartItems ci ON c.Id = ci.CartId INNER JOIN Books b ON ci.BookId = b.Id WHERE c.UserId = @id""";
+        
+        //return await connection.QueryAsync<CartInfo>(sql, new { id });
+        return await connection.QueryAsync<CartInfo, CartItemBook, CartInfo>(sql,
+            (cart, cartItem) =>
             {
                 CartInfo cartEntry;
 
                 if (!cartDictionary.TryGetValue(cart.Id, out cartEntry))
                 {
                     cartEntry = cart;
-                    cartEntry.Books = new List<Book>();
+                    cartEntry.CartItemBooks = new List<CartItemBook>();
                     cartDictionary.Add(cartEntry.Id, cartEntry);
                 }
 
-                cartEntry.Books.Add(book);
+                cartEntry.CartItemBooks.Add(cartItem);
                 return cartEntry;
             },
             new { id },
             splitOn: "BookId");
     }
-    
+
+    public async Task<IEnumerable<CartInfo>> GetUserPurchaseHistory(int id)
+    {
+        using var connection = _context.CreateConnection();
+        var cartDictionary = new Dictionary<int, CartInfo>();
+        var sql = """SELECT c.*, ci.*, b.* FROM Cart c INNER JOIN CartItems ci ON c.Id = ci.CartId INNER JOIN Books b ON ci.BookId = b.Id WHERE c.UserId = @id AND c.OrderStatus = @OrderStatus""";
+
+        //return await connection.QueryAsync<CartInfo>(sql, new { id });
+        return await connection.QueryAsync<CartInfo, CartItemBook, CartInfo>(sql,
+            (cart, cartItem) =>
+            {
+                CartInfo cartEntry;
+
+                if (!cartDictionary.TryGetValue(cart.Id, out cartEntry))
+                {
+                    cartEntry = cart;
+                    cartEntry.CartItemBooks = new List<CartItemBook>();
+                    cartDictionary.Add(cartEntry.Id, cartEntry);
+                }
+
+                cartEntry.CartItemBooks.Add(cartItem);
+                return cartEntry;
+            },
+            new { id, OrderStatus = OrderStatus.PaidFor },
+            splitOn: "BookId");
+    }
+
 
     public async Task Create(Cart cart)
     {

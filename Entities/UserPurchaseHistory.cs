@@ -1,11 +1,12 @@
 ﻿namespace WebApi.Entities
 {
-    public class CartInfo
+    public class UserPurchaseHistory
     {
         public int Id { get; set; }
-        public List<CartItemBook> CartItemBooks { get; set; }
         public int UserId { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PaymentOption PaymentOption { get; set; }
+
+        public List<CartItemBook> CartItemBook { get; set; }
     }
 }
