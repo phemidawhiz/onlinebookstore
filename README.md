@@ -4,11 +4,15 @@ Online Book Store Api for Transalliance Group
 
 # Setup
 
-Clone Repository - Git Clone https://github.com/phemidawhiz/onlinebookstore.git
+1. Clone Repository - Git Clone https://github.com/phemidawhiz/onlinebookstore.git
 
-Click the WebApi.sln to open the project in visual studio
+2. Click the WebApi.sln to open the project in visual studio
 
-Run the project by clicking the play button or pressing f5 key and visit the postman documentation at https://documenter.getpostman.com/view/2371999/2sA3QwbV1r for endpoint details
+3. Install dapper, npgsql, nunit using nuggets package manager.
+
+4. Run the project by clicking the play button or pressing f5 key 
+
+5. Visit the postman documentation at https://documenter.getpostman.com/view/2371999/2sA3QwbV1r for endpoint details
 
 
 # High Level Design in a nut shell
